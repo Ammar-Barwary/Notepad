@@ -14,9 +14,9 @@ namespace Notepad.Class
     {
         void Setting(TabControl tabControl)
         {
-            ((RichTextBox)tabControl.SelectedTab.Controls["textBox"]).Font = Properties.Settings.Default.Font;
-            ((RichTextBox)tabControl.SelectedTab.Controls["textBox"]).ForeColor = Properties.Settings.Default.Font_Color;
-            ((RichTextBox)tabControl.SelectedTab.Controls["textBox"]).BackColor = Properties.Settings.Default.Background_Color;
+            ((TextBox)tabControl.SelectedTab.Controls["textBox"]).Font = Properties.Settings.Default.Font;
+            ((TextBox)tabControl.SelectedTab.Controls["textBox"]).ForeColor = Properties.Settings.Default.Font_Color;
+            ((TextBox)tabControl.SelectedTab.Controls["textBox"]).BackColor = Properties.Settings.Default.Background_Color;
         }
 
         public bool OpenFile(TabControl tabControl, ContextMenuStrip contextMenuStrip, string tabName, string path)
@@ -40,14 +40,15 @@ namespace Notepad.Class
                 goto exit;
             }
 
-            RichTextBox textBox = new RichTextBox();
+            TextBox textBox = new TextBox();
 
             tabControl.TabPages[tabCount - 1].Controls.Add(textBox);
+            textBox.TabStop = false;
+            textBox.Multiline = true;
             textBox.Dock = DockStyle.Fill;
-            textBox.ScrollBars = RichTextBoxScrollBars.ForcedBoth;
+            textBox.ScrollBars = ScrollBars.Both;
             textBox.ContextMenuStrip = contextMenuStrip;
             textBox.WordWrap = false;
-            textBox.DetectUrls = false;
             textBox.Name = "textBox";
             textBox.BringToFront();
 
@@ -69,14 +70,15 @@ namespace Notepad.Class
             tabControl.TabPages.Add(tabName);
             int tabCount = tabControl.TabPages.Count;
 
-            RichTextBox textBox = new RichTextBox();
+            TextBox textBox = new TextBox();
 
             tabControl.TabPages[tabCount - 1].Controls.Add(textBox);
+            textBox.TabStop = false;
+            textBox.Multiline = true;
             textBox.Dock = DockStyle.Fill;
-            textBox.ScrollBars = RichTextBoxScrollBars.ForcedBoth;
+            textBox.ScrollBars = ScrollBars.Both;
             textBox.ContextMenuStrip = contextMenuStrip;
             textBox.WordWrap = false;
-            textBox.DetectUrls = false;
             textBox.Name = "textBox";
             textBox.BringToFront();
 
@@ -95,7 +97,7 @@ namespace Notepad.Class
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 StreamWriter sw = new StreamWriter(dialog.FileName);
-                sw.Write(((RichTextBox)tabControl.SelectedTab.Controls["textBox"]).Text);
+                sw.Write(((TextBox)tabControl.SelectedTab.Controls["textBox"]).Text);
                 sw.Close();
 
                 filePath.Remove(tabControl.SelectedTab.Text);
@@ -109,7 +111,7 @@ namespace Notepad.Class
             try
             {
                 StreamWriter sw = new StreamWriter(FilePath[tabControl.SelectedTab.Text]);
-                sw.Write(((RichTextBox)tabControl.SelectedTab.Controls["textBox"]).Text);
+                sw.Write(((TextBox)tabControl.SelectedTab.Controls["textBox"]).Text);
                 sw.Close();
             } catch { SaveAsFile(tabControl, FilePath); }
         }

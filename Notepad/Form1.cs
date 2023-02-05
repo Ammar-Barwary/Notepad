@@ -18,7 +18,9 @@ namespace Notepad
         MenuStripClass menuStripClass = new MenuStripClass();
         Dictionary<string, string> filePath = new Dictionary<string, string>();
 
+        string pathLable = "Path: ";
         int count = 1;
+        int action = 0;
 
         public Form1()
         {
@@ -28,21 +30,26 @@ namespace Notepad
             count++;
 
             filePath.Add(tabName, null);
+            TextPath.Text = pathLable + "";
             menuStripClass.NewFile(tabControl1, TextMenuStrip, tabName);
         }
 
         #region File Menu Tools
         private void NewToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            action = 1;
             string tabName = "Untitled-" + count;
             count++;
 
             filePath.Add(tabName, null);
+            TextPath.Text = pathLable + "";
             menuStripClass.NewFile(tabControl1, TextMenuStrip, tabName);
+            action = 0;
         }
 
         private void OpenToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            action = 1;
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "Any File|*.*";
 
@@ -52,20 +59,26 @@ namespace Notepad
                 string path = dialog.FileName;
 
                 if (menuStripClass.OpenFile(tabControl1, TextMenuStrip, name, path) == true)
+                {
                     filePath.Add(name, path);
-                else 
-                    MessageBox.Show("You can't add the file with the same name.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    TextPath.Text = pathLable + filePath[name];
+                }
+                else
+                    MessageBox.Show("You can't open the file with the same name.", "Message", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
+            action = 0;
         }
 
         private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             menuStripClass.SaveFile(tabControl1, filePath);
+            TextPath.Text = pathLable + filePath[tabControl1.SelectedTab.Text];
         }
 
         private void SaveToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             menuStripClass.SaveAsFile(tabControl1, filePath);
+            TextPath.Text = pathLable + filePath[tabControl1.SelectedTab.Text];
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -197,5 +210,11 @@ namespace Notepad
             form.ShowDialog();
         }
         #endregion
+
+        private void tabControl1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (action == 0)
+                TextPath.Text = pathLable + filePath[tabControl1.SelectedTab.Text];
+        }
     }
 }
